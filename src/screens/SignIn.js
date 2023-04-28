@@ -2,30 +2,19 @@ import React from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, ActivityIndicator } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useAuth } from '../contexts/Auth'
 
-export default function SignIn({navigation}) {
+export default function SignIn({ navigation }) {
   const [show, setShow] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [payload, setPayload] = React.useState({
     username: '',
     password: ''
   })
+  const auth = useAuth()
 
   const handleSetShow = () => {
     setShow(!show)
-  }
-
-  const handleSignIn = async () => {
-    setLoading(true)
-    // logic login pake api --> axios
-
-    setTimeout(async () => {
-      const token = 'some token'
-
-      // set token to local storage
-      await AsyncStorage.setItem('token', token)
-      setLoading(false)
-    }, 1000)
   }
 
   const handleRedirectSignUp = () => {
@@ -38,17 +27,23 @@ export default function SignIn({navigation}) {
       <Text style={styles.screenTitle}>Masuk</Text>
       <View style={styles.formGroup}>
         <Text>Nama Pengguna</Text>
-        <TextInput placeholder="Masukan pengguna" style={styles.formControl} />
+        <TextInput
+          placeholder="Masukan pengguna"
+          style={styles.formControl}
+          onChangeText={v => setPayload(prev => ({ ...prev, username: v }))} />
       </View>
       <View style={styles.formGroup}>
         <Text>Kata Sandi</Text>
         <View style={styles.formGroupAppend}>
-          <TextInput placeholder="Masukan kata sandi" secureTextEntry={!show} />
+          <TextInput
+            placeholder="Masukan kata sandi"
+            secureTextEntry={!show}
+            onChangeText={v => setPayload(prev => ({ ...prev, password: v }))} />
           <Icon onPress={handleSetShow} name={!show ? "eye" : "eye-off"} size={20} />
         </View>
-      </View> 
+      </View>
       <TouchableOpacity
-        onPress={handleSignIn}
+        onPress={() => auth.signIn(payload.username, payload.password)}
         activeOpacity={0.8}
         style={styles.btnSignIn}
         disabled={loading}>
