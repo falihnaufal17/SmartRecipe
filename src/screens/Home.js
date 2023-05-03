@@ -22,9 +22,6 @@ export default function Home({ navigation }) {
 
   const takePicture = async () => {
     const photo = await camera.current.takeSnapshot({
-      qualityPrioritization: 'quality',
-      quality: 1,
-      base64: true,
       skipMetadata: true
     })
     const formData = new FormData()
@@ -36,10 +33,11 @@ export default function Home({ navigation }) {
     })
     setLoading(true)
 
-    axios.post(`https://smartrecipeapi.kevinpratamasinaga.my.id/api/clarifai/detect`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+    axios.post(`https://86c7-103-247-196-24.ngrok-free.app/api/clarifai/detect`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then((res) => {
         setModalVisible(true)
-        setData(res.data.data)
+        console.log(res.data)
+        setData(res.data?.data)
         setLoading(false)
       })
       .catch((e) => {
