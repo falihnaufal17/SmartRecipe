@@ -33,7 +33,7 @@ export default function Home({ navigation }) {
     })
     setLoading(true)
 
-    axios.post(`https://86c7-103-247-196-24.ngrok-free.app/api/clarifai/detect`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+    axios.post(`https://smartrecipeapi.kevinpratamasinaga.my.id/api/clarifai/detect`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then((res) => {
         setModalVisible(true)
         console.log(res.data)
