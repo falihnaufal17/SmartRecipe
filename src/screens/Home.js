@@ -31,7 +31,7 @@ export default function Home({navigation}) {
       setDevice(devices.back)
 
       return () => setDevice(null)
-    }, [])
+    }, [devices.back])
   )
 
   const takePicture = async () => {
