@@ -11,32 +11,34 @@ import { useAuth } from '../contexts/Auth';
 import About from './About';
 import Preview from './Preview';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Recipe from './Recipe';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-function HomeStack() {
+function ScreenStack() {
   return (
     <Stack.Navigator screenOptions={{
       headerShown: false
     }}>
-      <Stack.Screen name="HomeStack" component={Home} />
+      <Stack.Screen name="HomeStack" component={HomeTab} />
+      <Stack.Screen name="RecipeStack" component={Recipe} />
       <Stack.Screen name="PreviewStack" component={Preview} />
     </Stack.Navigator>
   )
 }
 
-function TabNav() {
+function HomeTab() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color }) => {
           let iconName;
-          if (route.name === 'Home') {
+          if (route.name === 'HomeTab') {
             iconName = focused
               ? 'home'
               : 'home-outline';
-          } else if (route.name === 'About') {
+          } else if (route.name === 'AboutTab') {
             iconName = focused
               ? 'information'
               : 'information-outline';
@@ -46,8 +48,8 @@ function TabNav() {
         }
       })}
     >
-      <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="About" component={About} />
+      <Tab.Screen name="HomeTab" component={Home} />
+      <Tab.Screen name="AboutTab" component={About} />
     </Tab.Navigator>
   )
 }
@@ -72,7 +74,7 @@ export default function Screen() {
   } else {
     return (
       <NavigationContainer>
-        {authData ? <TabNav /> : <AuthNav />}
+        {authData ? <ScreenStack /> : <AuthNav />}
       </NavigationContainer>
     );
   }

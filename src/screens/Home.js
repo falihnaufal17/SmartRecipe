@@ -1,24 +1,38 @@
-import React, { useRef, useState, useCallback } from 'react'
-import { View, StyleSheet, ActivityIndicator, Pressable, Alert, Modal, FlatList, Image, Text, TouchableOpacity } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { View, StyleSheet, ActivityIndicator, Alert, Modal, FlatList, Image, Text, TouchableOpacity } from 'react-native'
 import { Camera, useCameraDevices } from 'react-native-vision-camera'
 import axios from 'axios'
+import { useFocusEffect } from '@react-navigation/native'
 
-const Item = ({ title, image }) => {
+const Item = ({ title, image, id, onPress }) => {
   return (
-    <View style={styles.item}>
+    <TouchableOpacity onPress={() => onPress(id)} style={styles.item}>
       <Image source={{ uri: image }} style={styles.thumbnail} />
       <Text style={styles.titleItem}>{title}</Text>
-    </View>
+    </TouchableOpacity>
   )
 }
 
-export default function Home({ navigation }) {
+export default function Home({navigation}) {
   const devices = useCameraDevices()
-  const device = devices.back
   const camera = useRef(null)
   const [modalVisible, setModalVisible] = useState(false)
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [device, setDevice] = useState(null)
+
+  useEffect(() => {
+    setDevice(devices.back)
+    return () => setDevice(null)
+  }, [devices.back])
+
+  useFocusEffect(
+    useCallback(() => {
+      setDevice(devices.back)
+
+      return () => setDevice(null)
+    }, [])
+  )
 
   const takePicture = async () => {
     const photo = await camera.current.takeSnapshot({
@@ -36,14 +50,19 @@ export default function Home({ navigation }) {
     axios.post(`https://smartrecipeapi.kevinpratamasinaga.my.id/api/clarifai/detect`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then((res) => {
         setModalVisible(true)
-        console.log(res.data)
         setData(res.data?.data)
         setLoading(false)
       })
       .catch((e) => {
-        Alert.alert('Failed', e.response.data)
+        console.log(e.response.data)
+        Alert.alert('Failed', e.response.data?.message?.message ?? 'Oops something wrong')
         setLoading(false)
       })
+  }
+
+  const goToDetail = (id) => {
+    setModalVisible(false)
+    navigation.navigate('RecipeStack', {id})
   }
 
   if (device == null) {
@@ -74,7 +93,7 @@ export default function Home({ navigation }) {
         <FlatList
           data={data}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <Item title={item.title} image={item.image} />}
+          renderItem={({ item }) => <Item title={item.title} image={item.image} id={item.id} onPress={goToDetail} />}
           contentContainerStyle={styles.listContainer}
         />
       </Modal>
@@ -117,7 +136,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 100,
     borderColor: '#FFFFFF',
-    borderWidth: 2
+    borderWidth: 3
   },
   listContainer: {
     marginHorizontal: 16,
