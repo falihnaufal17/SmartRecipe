@@ -89,7 +89,7 @@ export default function Home({navigation}) {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <Text style={styles.headerModal}>Yayy found {data.length} item recipes!</Text>
+        <Text style={styles.headerModal}>Found {data.length} Item Recipes!</Text>
         <FlatList
           data={data}
           keyExtractor={item => item.id}
