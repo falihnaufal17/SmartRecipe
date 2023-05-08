@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, ActivityIndicator 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '../contexts/Auth'
+import { APP_NAME } from '../constants/general'
 
 export default function SignIn({ navigation }) {
   const [show, setShow] = React.useState(false)
@@ -23,7 +24,7 @@ export default function SignIn({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.appTitle}>SmartRecipe</Text>
+      <Text style={styles.appTitle}>{APP_NAME}</Text>
       <Text style={styles.screenTitle}>Masuk</Text>
       <View style={styles.formGroup}>
         <Text>Nama Pengguna</Text>
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#625B71',
   },
   appTitle: {
-    fontSize: 45,
+    fontSize: 38,
     lineHeight: 52,
     fontWeight: '400',
     color: '#000000',

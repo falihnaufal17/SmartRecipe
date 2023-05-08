@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, ActivityIndicator } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { APP_NAME } from '../constants/general'
 
 export default function SignUp({navigation}) {
   const [show, setShow] = React.useState(false)
@@ -28,7 +29,7 @@ export default function SignUp({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.appTitle}>SmartRecipe</Text>
+      <Text style={styles.appTitle}>{APP_NAME}</Text>
       <Text style={styles.screenTitle}>Daftar</Text>
       <View style={styles.formGroup}>
         <Text>Nama Pengguna</Text>
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#625B71',
   },
   appTitle: {
-    fontSize: 45,
+    fontSize: 38,
     lineHeight: 52,
     fontWeight: '400',
     color: '#000000',

@@ -12,6 +12,7 @@ import About from './About';
 import Preview from './Preview';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Recipe from './Recipe';
+import Store from './Store';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -38,6 +39,8 @@ function HomeTab() {
             iconName = focused
               ? 'home'
               : 'home-outline';
+          } else if (route.name === 'StoreTab') {
+            iconName = focused ? 'store' : 'store-outline'
           } else if (route.name === 'AboutTab') {
             iconName = focused
               ? 'information'
@@ -48,8 +51,9 @@ function HomeTab() {
         }
       })}
     >
-      <Tab.Screen name="HomeTab" component={Home} />
-      <Tab.Screen name="AboutTab" component={About} />
+      <Tab.Screen name="HomeTab" options={{title: 'Home'}} component={Home} />
+      <Tab.Screen name="StoreTab" options={{title: 'Store'}} component={Store} />
+      <Tab.Screen name="AboutTab" options={{title: 'About'}} component={About} />
     </Tab.Navigator>
   )
 }
