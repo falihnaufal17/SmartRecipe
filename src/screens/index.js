@@ -13,6 +13,7 @@ import Preview from './Preview';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Recipe from './Recipe';
 import Store from './Store';
+import RecipeList from './RecipeList';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -25,6 +26,7 @@ function ScreenStack() {
       <Stack.Screen name="HomeStack" component={HomeTab} />
       <Stack.Screen name="RecipeStack" component={Recipe} />
       <Stack.Screen name="PreviewStack" component={Preview} />
+      <Stack.Screen name="RecipeListStack" component={RecipeList} />
     </Stack.Navigator>
   )
 }
