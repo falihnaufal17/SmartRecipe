@@ -39,10 +39,10 @@ function HomeTab() {
           let iconName;
           if (route.name === 'HomeTab') {
             iconName = focused
-              ? 'home'
-              : 'home-outline';
+              ? 'clipboard-text-search'
+              : 'clipboard-text-search-outline';
           } else if (route.name === 'StoreTab') {
-            iconName = focused ? 'store' : 'store-outline'
+            iconName = focused ? 'store-search' : 'store-search-outline'
           } else if (route.name === 'AboutTab') {
             iconName = focused
               ? 'information'
@@ -53,8 +53,8 @@ function HomeTab() {
         }
       })}
     >
-      <Tab.Screen name="HomeTab" options={{title: 'Home'}} component={Home} />
-      <Tab.Screen name="StoreTab" options={{title: 'Store'}} component={Store} />
+      <Tab.Screen name="HomeTab" options={{title: 'Find Recipes'}} component={Home} />
+      <Tab.Screen name="StoreTab" options={{title: 'Find a Grocery Store'}} component={Store} />
       <Tab.Screen name="AboutTab" options={{title: 'About'}} component={About} />
     </Tab.Navigator>
   )
