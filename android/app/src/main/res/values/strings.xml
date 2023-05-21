@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Smart Food Recipe</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCJnna80w4juc5LiCHAhOYq3v-3syo2Cws</string>
 </resources>
