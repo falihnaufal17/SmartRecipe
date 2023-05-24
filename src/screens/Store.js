@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Alert, TouchableOpacity, Linking } from 'react-native'
+import { Text, View, StyleSheet, Alert, TouchableOpacity, Linking, PermissionsAndroid, ScrollView, SafeAreaView, Dimensions, Image } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
 import { PLACES } from '../constants/store';
 import axios from 'axios'
 import { API_KEY_GOOGLE_MAPS, BASE_URL_PLACES_API } from '../constants/general';
 import Geocoder from 'react-native-geocoding';
+import Geolocation from 'react-native-geolocation-service';
 
 Geocoder.init(API_KEY_GOOGLE_MAPS);
 
@@ -24,38 +24,74 @@ export default function Store() {
     getCurrentPosition()
   }, [])
 
-  const getCurrentPosition = () => {
-    Geolocation.getCurrentPosition(
-      (pos) => {
-        setRegion(prev => ({
-          ...prev,
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
-        }));
-        Geocoder.from(pos.coords.latitude, pos.coords.longitude)
-          .then(json => {
-            const addressComponent = json.results[0].address_components[0];
-
-            setOriginPlace(addressComponent.short_name)
-          })
-          .catch(error => console.warn(error));
-      },
-      (error) => Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
-      { enableHighAccuracy: true }
+  // Check if location permission is granted
+  const hasLocationPermission = async () => {
+    const granted = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
+  };
+
+  const getCurrentPosition = () => {
+    if (hasLocationPermission()) {
+      Geolocation.getCurrentPosition(
+        position => {
+          setRegion(prev => ({
+            ...prev,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }));
+          Geocoder.from(position.coords.latitude, position.coords.longitude)
+            .then(json => {
+              const addressComponent = json.results[0].address_components[0];
+
+              setOriginPlace(addressComponent.short_name)
+            })
+            .catch(error => console.warn(error));
+        },
+        error => Alert.alert('Location Error', error.message),
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 10000,
+        },
+      );
+    } else {
+      Alert.alert(
+        'Location Permission Required',
+        'Please grant location permission in app settings',
+      );
+    }
   };
 
   const onChoosePlace = useCallback(async (place) => {
-    setActivePlace(place)
-    try {
-      const response = await axios.get(`${BASE_URL_PLACES_API}/findplacefromtext/json?fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&input=${place}&inputtype=textquery&key=${API_KEY_GOOGLE_MAPS}`)
+    const encodedPlace = place.toLowerCase().replace(" ", "%20")
+    const { width, height } = Dimensions.get('window');
+    const ASPECT_RATIO = width / height;
 
-      setRegion(prev => ({
-        ...prev,
-        latitude: response.data.candidates[0].geometry.location.lat,
-        longitude: response.data.candidates[0].geometry.location.lng,
-      }))
-      setDataPlaces(response.data.candidates)
+    getCurrentPosition()
+    setActivePlace(place)
+
+    try {
+      const response = await axios.get(`${BASE_URL_PLACES_API}/nearbysearch/json?key=${API_KEY_GOOGLE_MAPS}&location=${region.latitude},${region.longitude}&radius=1500&keyword=${encodedPlace}`)
+
+      if (response.data.results.length > 0) {
+        const northeastLat = response.data.results[0].geometry.viewport.northeast.lat;
+        const southwestLat = response.data.results[0].geometry.viewport.southwest.lat;
+        const latDelta = northeastLat - southwestLat;
+        const lngDelta = latDelta * ASPECT_RATIO;
+        console.log(response.data)
+        setRegion(prev => ({
+          ...prev,
+          latitude: response.data.results[0].geometry.location.lat,
+          longitude: response.data.results[0].geometry.location.lng,
+          latitudeDelta: latDelta,
+          longitudeDelta: lngDelta,
+        }))
+        setDataPlaces(response.data.results)
+      } else {
+        Alert.alert("Info", response.data.status)
+      }
     } catch (e) {
       throw e
     }
@@ -69,8 +105,8 @@ export default function Store() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.placeList}>
+    <SafeAreaView style={styles.container}>
+      <ScrollView horizontal style={styles.placeList} showsHorizontalScrollIndicator={false}>
         {PLACES.map((item, key) => {
           const activeItemStyle = item.value === activePlace ? { ...styles.placeItemActive } : {}
           const activeItemLabelStyle = item.value === activePlace ? { ...styles.placeItemLabelActive } : {}
@@ -81,7 +117,7 @@ export default function Store() {
             </TouchableOpacity>
           )
         })}
-      </View>
+      </ScrollView>
       <MapView
         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={styles.map}
@@ -90,20 +126,21 @@ export default function Store() {
         zoomControlEnabled={true}
         region={region}
       >
-        {dataPlaces.map((item, key) => (
+        {dataPlaces.length > 0 ? dataPlaces.map((item, key) => (
           <Marker
             key={key}
-            title={item.name}
-            description={item.formatted_address}
+            title="test"
+            description="test"
             onPress={(cb) => onOpenDirection(item.name)}
             coordinate={{
               latitude: item.geometry.location.lat,
               longitude: item.geometry.location.lng,
             }}
+            icon={{ uri: item.icon, width: 40, height: 40, scale: 2 }}
           />
-        ))}
+        )) : null}
       </MapView>
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -111,7 +148,6 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     height: '100%',
-    width: 400,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
@@ -124,14 +160,9 @@ const styles = StyleSheet.create({
     fontSize: 32
   },
   placeList: {
-    flexDirection: 'row',
     position: 'absolute',
     top: '10%',
-    left: 0,
-    right: 0,
-    zIndex: 2,
-    justifyContent: 'center',
-    alignItems: 'center'
+    zIndex: 2
   },
   placeItem: {
     backgroundColor: '#FFF',
