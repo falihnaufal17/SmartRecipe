@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Alert, TouchableOpacity, Linking, PermissionsAndroid, ScrollView, SafeAreaView, Dimensions, Image } from 'react-native'
+import React, { useCallback, useState } from 'react';
+import { Text, StyleSheet, Alert, TouchableOpacity, Linking, PermissionsAndroid, ScrollView, SafeAreaView } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { PLACES } from '../constants/store';
 import axios from 'axios'
 import { API_KEY_GOOGLE_MAPS, BASE_URL_PLACES_API } from '../constants/general';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from 'react-native-geolocation-service';
+import { useFocusEffect } from '@react-navigation/native';
 
 Geocoder.init(API_KEY_GOOGLE_MAPS);
 
@@ -20,10 +21,10 @@ export default function Store() {
   const [dataPlaces, setDataPlaces] = useState([])
   const [originPlace, setOriginPlace] = useState('')
 
-  useEffect(() => {
-    getCurrentPosition()
-  }, [])
-
+  useFocusEffect(
+    useCallback(() => getCurrentPosition(), [])
+  )
+  
   // Check if location permission is granted
   const hasLocationPermission = async () => {
     const granted = await PermissionsAndroid.check(
@@ -66,30 +67,21 @@ export default function Store() {
 
   const onChoosePlace = useCallback(async (place) => {
     const encodedPlace = place.toLowerCase().replace(" ", "%20")
-    const { width, height } = Dimensions.get('window');
-    const ASPECT_RATIO = width / height;
 
-    getCurrentPosition()
     setActivePlace(place)
 
     try {
       const response = await axios.get(`${BASE_URL_PLACES_API}/nearbysearch/json?key=${API_KEY_GOOGLE_MAPS}&location=${region.latitude},${region.longitude}&radius=1500&keyword=${encodedPlace}`)
 
       if (response.data.results.length > 0) {
-        const northeastLat = response.data.results[0].geometry.viewport.northeast.lat;
-        const southwestLat = response.data.results[0].geometry.viewport.southwest.lat;
-        const latDelta = northeastLat - southwestLat;
-        const lngDelta = latDelta * ASPECT_RATIO;
-        console.log(response.data)
         setRegion(prev => ({
           ...prev,
-          latitude: response.data.results[0].geometry.location.lat,
-          longitude: response.data.results[0].geometry.location.lng,
-          latitudeDelta: latDelta,
-          longitudeDelta: lngDelta,
+          latitudeDelta: 0.090,
+          longitudeDelta: 0.0150
         }))
         setDataPlaces(response.data.results)
       } else {
+        setDataPlaces([])
         Alert.alert("Info", response.data.status)
       }
     } catch (e) {
