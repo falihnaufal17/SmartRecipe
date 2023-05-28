@@ -81,6 +81,7 @@ export default function Store() {
 
   const onChoosePlace = async (place) => {
     const encodedPlace = place.toLowerCase().replace(" ", "%20")
+    
     Geolocation.getCurrentPosition(
       async position => {
 
@@ -146,9 +147,8 @@ export default function Store() {
         {dataPlaces.length > 0 ? dataPlaces.map((item, key) => (
           <Marker
             key={key}
-            title="test"
-            description="test"
-            onPress={(cb) => onOpenDirection(item.name)}
+            title={item.name}
+            description={item.opening_hours.open_now ? 'Buka' : 'Tutup'}
             coordinate={{
               latitude: item.geometry.location.lat,
               longitude: item.geometry.location.lng,
