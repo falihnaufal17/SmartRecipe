@@ -22,7 +22,21 @@ export default function Store() {
   const [originPlace, setOriginPlace] = useState('')
 
   useFocusEffect(
-    useCallback(() => getCurrentPosition(), [])
+    useCallback(() => {
+      getCurrentPosition()
+
+      return () => {
+        setRegion({
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.0121,
+        })
+        setActivePlace('')
+        setDataPlaces([])
+        setOriginPlace('')
+      }
+    }, [])
   )
   
   // Check if location permission is granted
@@ -65,29 +79,40 @@ export default function Store() {
     }
   };
 
-  const onChoosePlace = useCallback(async (place) => {
+  const onChoosePlace = async (place) => {
     const encodedPlace = place.toLowerCase().replace(" ", "%20")
+    Geolocation.getCurrentPosition(
+      async position => {
 
-    setActivePlace(place)
+        setActivePlace(place)
+    
+        try {
+          const response = await axios.get(`${BASE_URL_PLACES_API}/nearbysearch/json?key=${API_KEY_GOOGLE_MAPS}&location=${position.coords.latitude},${position.coords.longitude}&radius=1500&keyword=${encodedPlace}`)
+    
+          if (response.data.results.length > 0) {
+            setRegion(prev => ({
+              ...prev,
+              latitudeDelta: 0.090,
+              longitudeDelta: 0.0150
+            }))
+            setDataPlaces(response.data.results)
+          } else {
+            setDataPlaces([])
+            Alert.alert("Info", response.data.status)
+          }
+        } catch (e) {
+          throw e
+        }
 
-    try {
-      const response = await axios.get(`${BASE_URL_PLACES_API}/nearbysearch/json?key=${API_KEY_GOOGLE_MAPS}&location=${region.latitude},${region.longitude}&radius=1500&keyword=${encodedPlace}`)
-
-      if (response.data.results.length > 0) {
-        setRegion(prev => ({
-          ...prev,
-          latitudeDelta: 0.090,
-          longitudeDelta: 0.0150
-        }))
-        setDataPlaces(response.data.results)
-      } else {
-        setDataPlaces([])
-        Alert.alert("Info", response.data.status)
-      }
-    } catch (e) {
-      throw e
-    }
-  }, [])
+      },
+      error => Alert.alert('Location Error', error.message),
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+      },
+    );
+  }
 
   const onOpenDirection = (destination) => {
     const originFormatted = originPlace.replace(' ', '+')
