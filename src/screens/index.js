@@ -8,12 +8,13 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Home from './Home';
 import { useAuth } from '../contexts/Auth';
-import About from './About';
+import Account from './Account';
 import Preview from './Preview';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Recipe from './Recipe';
 import Store from './Store';
 import RecipeList from './RecipeList';
+import Bookmark from './Bookmark';
 
 const Stack = createNativeStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
@@ -43,10 +44,14 @@ function HomeTab() {
               : 'clipboard-text-search-outline';
           } else if (route.name === 'StoreTab') {
             iconName = focused ? 'store-search' : 'store-search-outline'
-          } else if (route.name === 'AboutTab') {
+          } else if (route.name === 'AccountTab') {
             iconName = focused
-              ? 'information'
-              : 'information-outline';
+              ? 'account-circle'
+              : 'account-circle-outline';
+          } else if (route.name === 'BookmarkTab') {
+            iconName = focused
+              ? 'bookmark-multiple'
+              : 'bookmark-multiple-outline';
           }
 
           return <Icon name={iconName} size={20} color={color} />;
@@ -55,7 +60,8 @@ function HomeTab() {
     >
       <Tab.Screen name="HomeTab" options={{title: 'Find Recipes'}} component={Home} />
       <Tab.Screen name="StoreTab" options={{title: 'Find a Grocery Store'}} component={Store} />
-      <Tab.Screen name="AboutTab" options={{title: 'About'}} component={About} />
+      <Tab.Screen name="BookmarkTab" options={{title: 'Bookmark'}} component={Bookmark} />
+      <Tab.Screen name="AccountTab" options={{title: 'Account'}} component={Account} />
     </Tab.Navigator>
   )
 }
