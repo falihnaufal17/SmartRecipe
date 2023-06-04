@@ -28,7 +28,7 @@ export default function Bookmark() {
   useFocusEffect(useCallback(() => {
     const fetchBookmarks = async () => {
       try {
-        const response = await axios.get('https://33e7-125-164-22-234.ngrok-free.app/api/bookmark/get-bookmark', {
+        const response = await axios.get('https://smartrecipeapi.kevinpratamasinaga.my.id/api/bookmark/get-bookmark', {
           headers: {
             'Authorization': `Bearer ${auth.authData.token}`
           }

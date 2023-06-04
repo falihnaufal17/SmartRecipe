@@ -49,7 +49,7 @@ export default function SignUp({navigation}) {
     
     if (Object.keys(objError).length === 0) {
       try {
-        const res = await axios.post('https://33e7-125-164-22-234.ngrok-free.app/api/account/register', payload)
+        const res = await axios.post('https://smartrecipeapi.kevinpratamasinaga.my.id/api/account/register', payload)
   
         if (res) {
           setLoading(false)

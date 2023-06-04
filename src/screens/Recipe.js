@@ -47,7 +47,7 @@ const Recipe = ({ route }) => {
 
   const addToBookmark = async () => {
     try {
-      const res = await axios.post('https://33e7-125-164-22-234.ngrok-free.app/api/bookmark/add-bookmark', {recipeId: id}, {
+      const res = await axios.post('https://smartrecipeapi.kevinpratamasinaga.my.id/api/bookmark/add-bookmark', {recipeId: id}, {
         headers: {
           'Authorization': `Bearer ${auth.authData.token}`
         }

@@ -14,7 +14,7 @@ export type AuthContextData = {
 }
 
 const signIn = async (username: string, _password: string): Promise<AuthData> => {
-  const res = await axios.post('https://33e7-125-164-22-234.ngrok-free.app/api/account/login', {
+  const res = await axios.post('https://smartrecipeapi.kevinpratamasinaga.my.id/api/account/login', {
     username,
     password: _password
   })
