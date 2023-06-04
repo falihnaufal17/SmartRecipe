@@ -7,7 +7,6 @@ import { APP_NAME } from '../constants/general'
 
 export default function SignIn({ navigation }) {
   const [show, setShow] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
   const [payload, setPayload] = React.useState({
     username: '',
     password: ''
@@ -21,6 +20,8 @@ export default function SignIn({ navigation }) {
   const handleRedirectSignUp = () => {
     navigation.navigate('SignUp')
   }
+
+  console.log(auth.loading)
 
   return (
     <View style={styles.container}>
@@ -47,8 +48,8 @@ export default function SignIn({ navigation }) {
         onPress={() => auth.signIn(payload.username, payload.password)}
         activeOpacity={0.8}
         style={styles.btnSignIn}
-        disabled={loading}>
-        {loading ? (
+        disabled={auth.loading}>
+        {auth.loading ? (
           <ActivityIndicator color="#FFFFFF" />
         ) : (
           <Text style={styles.btnSignInText}>Masuk</Text>

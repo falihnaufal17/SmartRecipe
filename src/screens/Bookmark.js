@@ -1,10 +1,9 @@
-import React from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import axios from 'axios'
+import React, { useCallback, useState } from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
 import { Text } from 'react-native-paper'
-
-const sampleData = {
-  title: 'sample recipe'
-}
+import { useAuth } from '../contexts/Auth'
 
 function _renderItem({ item: { title } }) {
   return (
@@ -23,10 +22,30 @@ function _headerItem() {
 }
 
 export default function Bookmark() {
+  const auth = useAuth()
+  const [data, setData] = useState([])
+
+  useFocusEffect(useCallback(() => {
+    const fetchBookmarks = async () => {
+      try {
+        const response = await axios.get('https://33e7-125-164-22-234.ngrok-free.app/api/bookmark/get-bookmark', {
+          headers: {
+            'Authorization': `Bearer ${auth.authData.token}`
+          }
+        })
+      
+        setData(response.data.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchBookmarks()
+  }, []))
   return (
     <FlatList
-      data={Array.from({ length: 30 }, () => sampleData)}
-      keyExtractor={(item, key) => key}
+      data={data}
+      keyExtractor={(item) => item.id}
       renderItem={_renderItem}
       ListHeaderComponent={_headerItem}
       contentContainerStyle={styles.container}

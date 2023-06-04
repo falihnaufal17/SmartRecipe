@@ -80,7 +80,7 @@ function AuthNav() {
 export default function Screen() {
 
   const { authData, loading } = useAuth()
-
+  console.log(authData)
   if (loading) {
     return <Splash />
   } else {

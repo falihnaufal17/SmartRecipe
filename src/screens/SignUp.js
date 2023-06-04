@@ -1,12 +1,21 @@
 import React from 'react'
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { StyleSheet, TextInput, View, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
+import {Text, MD3Colors} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { APP_NAME } from '../constants/general'
+import { APP_NAME, REGISTER_LABEL_INPUT } from '../constants/general'
+import axios from 'axios'
 
 export default function SignUp({navigation}) {
   const [show, setShow] = React.useState(false)
   const [showRetype, setShowRetype] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [payload, setPayload] = React.useState({
+    fullname: '',
+    username: '',
+    password: '',
+    confirmPassword: ''
+  })
+  const [errors, setErrors] = React.useState({})
 
   const handleSetShow = () => {
     setShow(!show)
@@ -16,11 +25,41 @@ export default function SignUp({navigation}) {
     setShowRetype(!showRetype)
   }
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
+    const objError = {}
+
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
+    
+    Object.keys(payload).forEach(key => {
+      if (payload[key] === '') {
+        objError[key] = `${REGISTER_LABEL_INPUT[key]} harus diisi`
+  
+        setErrors(prev => ({...prev, ...objError}))
+        setLoading(false)
+        return
+      } else {
+        const tempObj = errors
+        delete tempObj[key]
+
+        setErrors(prev => ({...prev, ...tempObj}))
+        setLoading(false)
+        return
+      }
+    })
+    
+    if (Object.keys(objError).length === 0) {
+      try {
+        const res = await axios.post('https://33e7-125-164-22-234.ngrok-free.app/api/account/register', payload)
+  
+        if (res) {
+          setLoading(false)
+          handleRedirectSignIn()
+        }
+      } catch (error) {
+        setLoading(false)
+        Alert.alert('Error', error.response.data.message)
+      }
+    }
   }
 
   const handleRedirectSignIn = () => {
@@ -32,30 +71,38 @@ export default function SignUp({navigation}) {
       <Text style={styles.appTitle}>{APP_NAME}</Text>
       <Text style={styles.screenTitle}>Daftar</Text>
       <View style={styles.formGroup}>
+        <Text>Nama Lengkap</Text>
+        <TextInput placeholder="Masukan nama lengkap" style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, fullname: v}))} />
+        {errors?.fullname ? <Text style={styles.textError} variant="bodySmall">{errors.fullname}</Text> : null}
+      </View>
+      <View style={styles.formGroup}>
         <Text>Nama Pengguna</Text>
-        <TextInput placeholder="Masukan pengguna" style={styles.formControl} />
+        <TextInput placeholder="Masukan pengguna" style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, username: v}))} />
+        {errors?.username ? <Text style={styles.textError} variant="bodySmall">{errors.username}</Text> : null}
       </View>
       <View style={styles.formGroup}>
         <Text>Kata Sandi</Text>
         <View style={styles.formGroupAppend}>
-          <TextInput placeholder="Masukan kata sandi" secureTextEntry={!show} />
+          <TextInput placeholder="Masukan kata sandi" secureTextEntry={!show} onChangeText={v => setPayload(prev => ({...prev, password: v}))} />
           <Icon onPress={handleSetShow} name={!show ? "eye" : "eye-off"} size={20} />
         </View>
+        {errors?.password ? <Text style={styles.textError} variant="bodySmall">{errors.password}</Text> : null}
       </View>
       <View style={styles.formGroup}>
         <Text>Masukan Ulang Kata Sandi</Text>
         <View style={styles.formGroupAppend}>
-          <TextInput placeholder="Masukan ulang kata sandi" secureTextEntry={!showRetype} />
+          <TextInput placeholder="Masukan ulang kata sandi" secureTextEntry={!showRetype} onChangeText={v => setPayload(prev => ({...prev, confirmPassword: v}))} />
           <Icon onPress={handleSetShowRetype} name={!showRetype ? "eye" : "eye-off"} size={20} />
         </View>
-      </View> 
+        {errors?.confirmPassword ? <Text style={styles.textError} variant="bodySmall">{errors.confirmPassword}</Text> : null}
+      </View>
       <TouchableOpacity
         onPress={handleSignUp}
         activeOpacity={0.8}
         style={styles.btnSignIn}
         disabled={loading}>
         {loading ? (
-          <ActivityIndicator color="#FFFFFF" />
+          <ActivityIndicator color="#FFF" />
         ) : (
           <Text style={styles.btnSignInText}>Daftar</Text>
         )}
@@ -122,5 +169,8 @@ const styles = StyleSheet.create({
     color: '#000000',
     marginBottom: 32,
     textAlign: 'center'
+  },
+  textError: {
+    color: MD3Colors.error50
   }
 })

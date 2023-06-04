@@ -1,13 +1,16 @@
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'
 import React, { useCallback, useState } from 'react'
-import { Alert, Text, View, StyleSheet, ActivityIndicator, Image, ScrollView, SafeAreaView } from 'react-native'
+import { Alert, View, StyleSheet, ActivityIndicator, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
 import { firstLetterCapital } from '../helper';
+import {Text, MD3Colors} from 'react-native-paper'
+import { useAuth } from '../contexts/Auth';
 
 const Recipe = ({ route }) => {
   const { id } = route.params
   const [detail, setDetail] = useState(null)
   const [loading, setLoading] = useState(false)
+  const auth = useAuth()
 
   useFocusEffect(
     useCallback(() => {
@@ -42,12 +45,29 @@ const Recipe = ({ route }) => {
     )
   }
 
+  const addToBookmark = async () => {
+    try {
+      const res = await axios.post('https://33e7-125-164-22-234.ngrok-free.app/api/bookmark/add-bookmark', {recipeId: id}, {
+        headers: {
+          'Authorization': `Bearer ${auth.authData.token}`
+        }
+      })
+      console.log(res.data)
+    } catch (error) {
+      console.log(error.response.data)
+      // Alert.alert('Error', error.response.data.message)
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.header}>
           <Image source={{ uri: detail?.image }} style={styles.thumbnail} />
           <Text style={styles.headerTitle}>{detail?.title}</Text>
+          <TouchableOpacity style={styles.btnBookmark} activeOpacity={0.8} onPress={addToBookmark}>
+            <Text style={styles.txtBtnBookmark}>Tambah ke penanda buku</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.contentSection}>
           <Text style={styles.contentTitle}>Ingredients:</Text>
@@ -97,14 +117,15 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   header: {
-    alignItems: 'center'
+    alignItems: 'baseline'
   },
   headerTitle: {
     fontWeight: '600',
     color: '#000000',
     fontSize: 24,
     marginBottom: 20,
-    lineHeight: 32
+    lineHeight: 32,
+    textAlign: 'center'
   },
   content: {
     textAlign: 'justify',
@@ -125,5 +146,16 @@ const styles = StyleSheet.create({
   },
   contentSection: {
     marginBottom: 16
+  },
+  btnBookmark: {
+    backgroundColor: MD3Colors.primary40,
+    paddingVertical: 10,
+    width: '100%',
+    marginBottom: 16,
+    borderRadius: 100
+  },
+  txtBtnBookmark: {
+    color: '#FFF',
+    textAlign: 'center'
   }
 })

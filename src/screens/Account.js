@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Camera } from "react-native-vision-camera";
-import {View, StyleSheet, TouchableOpacity, Permission, PermissionsAndroid} from 'react-native'
+import {View, StyleSheet, TouchableOpacity, PermissionsAndroid} from 'react-native'
 import {MD2Colors, Text} from 'react-native-paper'
+import { useAuth } from "../contexts/Auth";
 
 export default function About() {
   const [permission, setPermission] = useState('denied')
   const [locationPermission, setLocationPermission] = useState('denied')
+  const auth = useAuth()
 
   useEffect(() => {
     const requestCameraPermission = async () => {
@@ -29,13 +31,13 @@ export default function About() {
     <View style={styles.container}>
       <View>
         <View>
-          <Text variant="bodyLarge">Lorem Ipsum</Text>
-          <Text variant="bodyLarge">loremIpsum@mail.com</Text>
+          <Text variant="bodyLarge">Nama Lengkap: {auth.authData.fullname}</Text>
+          <Text variant="bodyLarge">Nama Pengguna: {auth.authData.username}</Text>
         </View>
         <Text variant="bodyLarge">Camera Permission: {permission}</Text>
         <Text variant="bodyLarge">Location Permission: {locationPermission}</Text>
       </View>
-      <TouchableOpacity style={styles.btnLogout} activeOpacity={0.8}>
+      <TouchableOpacity style={styles.btnLogout} activeOpacity={0.8} onPress={() => auth.signOut()}>
         <Text style={styles.txtBtnLogout}>Logout</Text>
       </TouchableOpacity>
     </View>
