@@ -16,7 +16,7 @@ function _renderItem({ item: { title } }) {
 function _headerItem() {
   return (
     <View style={styles.header}>
-      <Text variant='headlineLarge'>Bookmark</Text>
+      <Text variant='headlineLarge'>Bookmarks</Text>
     </View>
   )
 }

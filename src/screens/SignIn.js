@@ -26,19 +26,19 @@ export default function SignIn({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.appTitle}>{APP_NAME}</Text>
-      <Text style={styles.screenTitle}>Masuk</Text>
+      <Text style={styles.screenTitle}>Login</Text>
       <View style={styles.formGroup}>
-        <Text>Nama Pengguna</Text>
+        <Text>Username</Text>
         <TextInput
-          placeholder="Masukan pengguna"
+          placeholder="Type username here..."
           style={styles.formControl}
           onChangeText={v => setPayload(prev => ({ ...prev, username: v }))} />
       </View>
       <View style={styles.formGroup}>
-        <Text>Kata Sandi</Text>
+        <Text>Password</Text>
         <View style={styles.formGroupAppend}>
           <TextInput
-            placeholder="Masukan kata sandi"
+            placeholder="Type password here..."
             secureTextEntry={!show}
             onChangeText={v => setPayload(prev => ({ ...prev, password: v }))} />
           <Icon onPress={handleSetShow} name={!show ? "eye" : "eye-off"} size={20} />
@@ -52,14 +52,14 @@ export default function SignIn({ navigation }) {
         {auth.loading ? (
           <ActivityIndicator color="#FFFFFF" />
         ) : (
-          <Text style={styles.btnSignInText}>Masuk</Text>
+          <Text style={styles.btnSignInText}>Login</Text>
         )}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={handleRedirectSignUp}
         activeOpacity={0.8}
         style={[styles.btnSignIn, styles.btnSignUp]}>
-        <Text style={styles.btnSignInText}>Daftar</Text>
+        <Text style={styles.btnSignInText}>Register</Text>
       </TouchableOpacity>
     </View>
   )

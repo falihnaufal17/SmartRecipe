@@ -66,7 +66,7 @@ const Recipe = ({ route }) => {
           <Image source={{ uri: detail?.image }} style={styles.thumbnail} />
           <Text style={styles.headerTitle}>{detail?.title}</Text>
           <TouchableOpacity style={styles.btnBookmark} activeOpacity={0.8} onPress={addToBookmark}>
-            <Text style={styles.txtBtnBookmark}>Tambah ke penanda buku</Text>
+            <Text style={styles.txtBtnBookmark}>Add to Bookmark</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.contentSection}>

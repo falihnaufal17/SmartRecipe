@@ -148,7 +148,7 @@ export default function Store() {
           <Marker
             key={key}
             title={item.name}
-            description={item.opening_hours.open_now ? 'Buka' : 'Tutup'}
+            description={item?.opening_hours?.open_now ? 'Buka' : 'Tutup'}
             coordinate={{
               latitude: item.geometry.location.lat,
               longitude: item.geometry.location.lng,
