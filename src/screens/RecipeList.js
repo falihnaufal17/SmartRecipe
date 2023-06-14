@@ -80,20 +80,7 @@ export default function RecipeList({ route, navigation }) {
 
   return (
     <View style={styles.container(loading)}>
-      {!loading ? (
-        <>
-          <Text style={styles.title}>We've found {data.data.length} item recipes!</Text>
-          {data.detectedIngredients.length > 0 ? (
-            <>
-              <Text style={styles.subtitle}>Detected Ingredients:</Text>
-              {data.detectedIngredients.map((item, key) => (
-                <Text style={styles.itemIngredients} key={key}>{key + 1}. {item}</Text>
-              ))}
-            </>
-          ) : null}
-        </>
-      ) : null}
-      <Text style={styles.subtitle}>Suggested Recipes:</Text>
+      <Text style={styles.subtitle}>Suggested Recipe:</Text>
       <FlatList
         data={data.data}
         keyExtractor={item => item.id}
