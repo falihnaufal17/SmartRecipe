@@ -60,7 +60,7 @@ function HomeTab() {
     >
       <Tab.Screen name="HomeTab" options={{title: 'Find Recipes'}} component={Home} />
       <Tab.Screen name="StoreTab" options={{title: 'Find a Grocery Store'}} component={Store} />
-      <Tab.Screen name="BookmarkTab" options={{title: 'Bookmark'}} component={Bookmark} />
+      <Tab.Screen name="BookmarkTab" options={{title: 'Bookmarks'}} component={Bookmark} />
       <Tab.Screen name="AccountTab" options={{title: 'Account'}} component={Account} />
     </Tab.Navigator>
   )

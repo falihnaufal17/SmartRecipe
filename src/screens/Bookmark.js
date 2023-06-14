@@ -18,7 +18,7 @@ function _renderItem({ item: { title, body, recipe_id }, onPress }) {
 function _headerItem() {
   return (
     <View style={styles.header}>
-      <Text variant='headlineLarge'>Bookmark</Text>
+      <Text variant='headlineLarge'>Bookmarks</Text>
     </View>
   )
 }

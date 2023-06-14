@@ -19,7 +19,7 @@ const ListEmpty = ({ loading }) => (
         <ActivityIndicator size="large" />
         <Text>Loading...</Text>
       </>
-    ) : <Text>Oops data recipe is not found</Text>
+    ) : <Text>Oops recipe data is not found</Text>
     }
   </View>
 )
@@ -80,7 +80,20 @@ export default function RecipeList({ route, navigation }) {
 
   return (
     <View style={styles.container(loading)}>
-      <Text style={styles.subtitle}>Suggested Recipe:</Text>
+      {!loading ? (
+        <>
+          <Text style={styles.title}>We've found {data.data.length} item recipes!</Text>
+          {data.detectedIngredients.length > 0 ? (
+            <>
+              <Text style={styles.subtitle}>Detected Ingredients:</Text>
+              {data.detectedIngredients.map((item, key) => (
+                <Text style={styles.itemIngredients} key={key}>{key + 1}. {item}</Text>
+              ))}
+            </>
+          ) : null}
+        </>
+      ) : null}
+      <Text style={styles.subtitle}>Suggested Recipes:</Text>
       <FlatList
         data={data.data}
         keyExtractor={item => item.id}

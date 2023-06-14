@@ -31,8 +31,8 @@ export default function About() {
     <View style={styles.container}>
       <View>
         <View>
-          <Text variant="bodyLarge">Nama Lengkap: {auth.authData.fullname}</Text>
-          <Text variant="bodyLarge">Nama Pengguna: {auth.authData.username}</Text>
+          <Text variant="bodyLarge">Fullname: {auth.authData.fullname}</Text>
+          <Text variant="bodyLarge">Username: {auth.authData.username}</Text>
         </View>
         <Text variant="bodyLarge">Camera Permission: {permission}</Text>
         <Text variant="bodyLarge">Location Permission: {locationPermission}</Text>
