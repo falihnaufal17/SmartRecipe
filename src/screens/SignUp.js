@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, TextInput, View, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
 import {Text, MD3Colors} from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { APP_NAME, REGISTER_LABEL_INPUT } from '../constants/general'
+import { APP_NAME, BASE_API_URL, REGISTER_LABEL_INPUT } from '../constants/general'
 import axios from 'axios'
 
 export default function SignUp({navigation}) {
@@ -49,7 +49,7 @@ export default function SignUp({navigation}) {
     
     if (Object.keys(objError).length === 0) {
       try {
-        const res = await axios.post('https://smartrecipeapi.kevinpratamasinaga.my.id/api/account/register', payload)
+        const res = await axios.post(`${BASE_API_URL}/account/register`, payload)
   
         if (res) {
           setLoading(false)

@@ -1,10 +1,11 @@
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'
 import React, { useCallback, useState } from 'react'
-import { Alert, View, StyleSheet, ActivityIndicator, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native'
+import { Alert, View, StyleSheet, ActivityIndicator, Image, ScrollView, SafeAreaView, TouchableOpacity, ToastAndroid } from 'react-native'
 import { firstLetterCapital } from '../helper';
 import {Text, MD3Colors} from 'react-native-paper'
 import { useAuth } from '../contexts/Auth';
+import { BASE_API_URL } from '../constants/general';
 
 const Recipe = ({ route }) => {
   const { id } = route.params
@@ -12,21 +13,26 @@ const Recipe = ({ route }) => {
   const [loading, setLoading] = useState(false)
   const auth = useAuth()
 
+  const fetchDetail = async () => {
+    setLoading(true)
+
+    try {
+      const response = await axios.get(`${BASE_API_URL}/clarifai/detail/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${auth.authData.token}`
+        }
+      })
+
+      setDetail(response.data?.data)
+      setLoading(false)
+    } catch (e) {
+      setLoading(false)
+      Alert.alert('Error', e.response.data?.message?.message ?? 'oops something wrong')
+    }
+  }
+
   useFocusEffect(
     useCallback(() => {
-      const fetchDetail = async () => {
-        setLoading(true)
-
-        try {
-          const response = await axios.get(`https://smartrecipeapi.kevinpratamasinaga.my.id/api/clarifai/detail/${id}`)
-
-          setDetail(response.data?.data)
-          setLoading(false)
-        } catch (e) {
-          setLoading(false)
-          Alert.alert('Error', e.response.data?.message?.message ?? 'oops something wrong')
-        }
-      }
 
       fetchDetail()
 
@@ -35,6 +41,7 @@ const Recipe = ({ route }) => {
       }
     }, [id])
   )
+  
 
   if (loading) {
     return (
@@ -47,27 +54,49 @@ const Recipe = ({ route }) => {
 
   const addToBookmark = async () => {
     try {
-      const res = await axios.post('https://smartrecipeapi.kevinpratamasinaga.my.id/api/bookmark/add-bookmark', {recipeId: id}, {
+      const res = await axios.post(`${BASE_API_URL}/bookmark/add-bookmark`, {recipeId: id}, {
         headers: {
           'Authorization': `Bearer ${auth.authData.token}`
         }
       })
-      console.log(res.data)
+
+      fetchDetail()
+      ToastAndroid.show(res.data.message, ToastAndroid.SHORT)
     } catch (error) {
-      console.log(error.response.data)
-      // Alert.alert('Error', error.response.data.message)
+      ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT)
+    }
+  }
+
+  const deleteBookmark = async () => {
+    try {
+      const res = await axios.post(`${BASE_API_URL}/bookmark/delete-bookmark/${detail.bookmarkId}`, {
+        headers: {
+          'Authorization': `Bearer ${auth.authData.token}`
+        }
+      })
+
+      fetchDetail()
+      ToastAndroid.show(res.data.message, ToastAndroid.SHORT)
+    } catch (error) {
+      ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT)
     }
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView>
+    <SafeAreaView>
+      <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Image source={{ uri: detail?.image }} style={styles.thumbnail} />
           <Text style={styles.headerTitle}>{detail?.title}</Text>
-          <TouchableOpacity style={styles.btnBookmark} activeOpacity={0.8} onPress={addToBookmark}>
-            <Text style={styles.txtBtnBookmark}>Tambah ke penanda buku</Text>
-          </TouchableOpacity>
+          {detail ? !detail?.isBookmarked ? (
+            <TouchableOpacity style={styles.btnBookmark} activeOpacity={0.8} onPress={addToBookmark}>
+              <Text style={styles.txtBtnBookmark}>Tambah ke penanda buku</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={[styles.btnBookmark, styles.btnDangerBookmark]} activeOpacity={0.8} onPress={deleteBookmark}>
+              <Text style={styles.txtBtnBookmark}>Hapus dari penanda buku</Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
         <View style={styles.contentSection}>
           <Text style={styles.contentTitle}>Ingredients:</Text>
@@ -101,8 +130,8 @@ export default Recipe
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
-    marginTop: 20
+    paddingHorizontal: 20,
+    paddingTop: 20
   },
   containerLoading: {
     flex: 1,
@@ -157,5 +186,8 @@ const styles = StyleSheet.create({
   txtBtnBookmark: {
     color: '#FFF',
     textAlign: 'center'
-  }
+  },
+  btnDangerBookmark: {
+    backgroundColor: MD3Colors.error40,
+  },
 })

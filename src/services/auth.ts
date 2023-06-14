@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BASE_API_URL } from "../constants/general";
 
 export type AuthData = {
   token: string;
@@ -14,7 +15,7 @@ export type AuthContextData = {
 }
 
 const signIn = async (username: string, _password: string): Promise<AuthData> => {
-  const res = await axios.post('https://smartrecipeapi.kevinpratamasinaga.my.id/api/account/login', {
+  const res = await axios.post(`${BASE_API_URL}/account/login`, {
     username,
     password: _password
   })

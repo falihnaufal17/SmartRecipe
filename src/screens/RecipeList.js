@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { TouchableOpacity, Image, Text, View, StyleSheet, Alert, FlatList, ActivityIndicator } from 'react-native'
+import { BASE_API_URL } from '../constants/general'
 
 const Item = ({ title, image, id, onPress }) => {
   return (
@@ -55,7 +56,7 @@ export default function RecipeList({ route, navigation }) {
         uri: `file://${path}`
       })
 
-      const res = await axios.post(`https://smartrecipeapi.kevinpratamasinaga.my.id/api/clarifai/detect`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      const res = await axios.post(`${BASE_API_URL}/clarifai/detect`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       const { data: respData } = res.data
       const { data: recipes, detectedIngredients } = respData
 
@@ -79,19 +80,6 @@ export default function RecipeList({ route, navigation }) {
 
   return (
     <View style={styles.container(loading)}>
-      {!loading ? (
-        <>
-          <Text style={styles.title}>Yayy found {data.data.length} item recipes!</Text>
-          {data.detectedIngredients.length > 0 ? (
-            <>
-              <Text style={styles.subtitle}>Detected Ingredients:</Text>
-              {data.detectedIngredients.map((item, key) => (
-                <Text style={styles.itemIngredients} key={key}>{key + 1}. {item}</Text>
-              ))}
-            </>
-          ) : null}
-        </>
-      ) : null}
       <Text style={styles.subtitle}>Suggested Recipe:</Text>
       <FlatList
         data={data.data}
@@ -99,6 +87,19 @@ export default function RecipeList({ route, navigation }) {
         renderItem={({ item }) => <Item title={item.title} image={item.image} id={item.id} onPress={goToDetail} />}
         ListEmptyComponent={<ListEmpty loading={loading} />}
         showsVerticalScrollIndicator={false}
+        ListHeaderComponent={!loading ? (
+          <>
+            <Text style={styles.title}>Yayy found {data.data.length} item recipes!</Text>
+            {data.detectedIngredients.length > 0 ? (
+              <>
+                <Text style={styles.subtitle}>Detected Ingredients:</Text>
+                {data.detectedIngredients.map((item, key) => (
+                  <Text style={styles.itemIngredients} key={key}>{key + 1}. {item}</Text>
+                ))}
+              </>
+            ) : null}
+          </>
+        ) : null}
       />
     </View>
   )

@@ -7,3 +7,4 @@ export const REGISTER_LABEL_INPUT = {
   password: 'Kata Sandi',
   confirmPassword: 'Konfirmasi Kata Sandi'
 }
+export const BASE_API_URL = 'https://smartrecipeapi.kevinpratamasinaga.my.id/api'
