@@ -69,7 +69,7 @@ const Recipe = ({ route }) => {
 
   const deleteBookmark = async () => {
     try {
-      const res = await axios.post(`${BASE_API_URL}/bookmark/delete-bookmark/${detail.bookmarkId}`, {
+      const res = await axios.delete(`${BASE_API_URL}/bookmark/delete-bookmark/${detail.bookmarkId}`, {
         headers: {
           'Authorization': `Bearer ${auth.authData.token}`
         }
