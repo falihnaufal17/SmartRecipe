@@ -73,8 +73,8 @@ export default function Store() {
       );
     } else {
       Alert.alert(
-        'Location Permission Required',
-        'Please grant location permission in app settings',
+        'Izin Akses Lokasi Diperlukan',
+        'Tolong berikan izin akses lokasi pada pengaturan aplikasi',
       );
     }
   };

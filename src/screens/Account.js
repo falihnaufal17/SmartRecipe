@@ -20,7 +20,7 @@ export default function About() {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
 
-      setLocationPermission(granted ? 'authorized' : 'denied')
+      setLocationPermission(granted ? 'Diizinkan' : 'Tidak Diizinkan')
     };
 
     requestCameraPermission()
@@ -31,14 +31,14 @@ export default function About() {
     <View style={styles.container}>
       <View>
         <View>
-          <Text variant="bodyLarge">Fullname: {auth.authData.fullname}</Text>
-          <Text variant="bodyLarge">Username: {auth.authData.username}</Text>
+          <Text variant="bodyLarge">Nama Lengkap: {auth.authData.fullname}</Text>
+          <Text variant="bodyLarge">Nama Pengguna: {auth.authData.username}</Text>
         </View>
-        <Text variant="bodyLarge">Camera Permission: {permission}</Text>
-        <Text variant="bodyLarge">Location Permission: {locationPermission}</Text>
+        <Text variant="bodyLarge">Izin Akses Kamera: {permission}</Text>
+        <Text variant="bodyLarge">Izin Akses Lokasi: {locationPermission}</Text>
       </View>
       <TouchableOpacity style={styles.btnLogout} activeOpacity={0.8} onPress={() => auth.signOut()}>
-        <Text style={styles.txtBtnLogout}>Logout</Text>
+        <Text style={styles.txtBtnLogout}>Keluar</Text>
       </TouchableOpacity>
     </View>
   )

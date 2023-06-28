@@ -69,29 +69,29 @@ export default function SignUp({navigation}) {
   return (
     <View style={styles.container}>
       <Text style={styles.appTitle}>{APP_NAME}</Text>
-      <Text style={styles.screenTitle}>Register</Text>
+      <Text style={styles.screenTitle}>Daftar</Text>
       <View style={styles.formGroup}>
-        <Text>Fullname</Text>
-        <TextInput placeholder="Type fullname here..." style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, fullname: v}))} />
+        <Text>Nama Lengkap</Text>
+        <TextInput placeholder="Masukkan nama lengkap disini..." style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, fullname: v}))} />
         {errors?.fullname ? <Text style={styles.textError} variant="bodySmall">{errors.fullname}</Text> : null}
       </View>
       <View style={styles.formGroup}>
-        <Text>Username</Text>
-        <TextInput placeholder="Type username here..." style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, username: v}))} />
+        <Text>Nama Pengguna</Text>
+        <TextInput placeholder="Masukkan nama pengguna disini..." style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, username: v}))} />
         {errors?.username ? <Text style={styles.textError} variant="bodySmall">{errors.username}</Text> : null}
       </View>
       <View style={styles.formGroup}>
-        <Text>Password</Text>
+        <Text>Kata Sandi</Text>
         <View style={styles.formGroupAppend}>
-          <TextInput placeholder="Type password here..." secureTextEntry={!show} onChangeText={v => setPayload(prev => ({...prev, password: v}))} />
+          <TextInput placeholder="Masukkan kata sandi disini..." secureTextEntry={!show} onChangeText={v => setPayload(prev => ({...prev, password: v}))} />
           <Icon onPress={handleSetShow} name={!show ? "eye" : "eye-off"} size={20} />
         </View>
         {errors?.password ? <Text style={styles.textError} variant="bodySmall">{errors.password}</Text> : null}
       </View>
       <View style={styles.formGroup}>
-        <Text>Re-enter Password</Text>
+        <Text>Konfirmasi Kata Sandi</Text>
         <View style={styles.formGroupAppend}>
-          <TextInput placeholder="Type password here..." secureTextEntry={!showRetype} onChangeText={v => setPayload(prev => ({...prev, confirmPassword: v}))} />
+          <TextInput placeholder="Masukkan ulang kata sandi disini..." secureTextEntry={!showRetype} onChangeText={v => setPayload(prev => ({...prev, confirmPassword: v}))} />
           <Icon onPress={handleSetShowRetype} name={!showRetype ? "eye" : "eye-off"} size={20} />
         </View>
         {errors?.confirmPassword ? <Text style={styles.textError} variant="bodySmall">{errors.confirmPassword}</Text> : null}
@@ -104,14 +104,14 @@ export default function SignUp({navigation}) {
         {loading ? (
           <ActivityIndicator color="#FFF" />
         ) : (
-          <Text style={styles.btnSignInText}>Register</Text>
+          <Text style={styles.btnSignInText}>Daftar</Text>
         )}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={handleRedirectSignIn}
         activeOpacity={0.8}
         style={[styles.btnSignIn, styles.btnSignUp]}>
-        <Text style={styles.btnSignInText}>Login</Text>
+        <Text style={styles.btnSignInText}>Masuk</Text>
       </TouchableOpacity>
     </View>
   )

@@ -58,10 +58,10 @@ function HomeTab() {
         }
       })}
     >
-      <Tab.Screen name="HomeTab" options={{title: 'Find Recipes'}} component={Home} />
-      <Tab.Screen name="StoreTab" options={{title: 'Find a Grocery Store'}} component={Store} />
-      <Tab.Screen name="BookmarkTab" options={{title: 'Bookmarks'}} component={Bookmark} />
-      <Tab.Screen name="AccountTab" options={{title: 'Account'}} component={Account} />
+      <Tab.Screen name="HomeTab" options={{title: 'Cari Resep'}} component={Home} />
+      <Tab.Screen name="StoreTab" options={{title: 'Cari Toko Terdekat'}} component={Store} />
+      <Tab.Screen name="BookmarkTab" options={{title: 'Riwayat Resep'}} component={Bookmark} />
+      <Tab.Screen name="AccountTab" options={{title: 'Akun'}} component={Account} />
     </Tab.Navigator>
   )
 }

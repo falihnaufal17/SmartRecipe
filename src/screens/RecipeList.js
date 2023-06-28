@@ -19,7 +19,7 @@ const ListEmpty = ({ loading }) => (
         <ActivityIndicator size="large" />
         <Text>Loading...</Text>
       </>
-    ) : <Text>Oops recipe data is not found</Text>
+    ) : <Text>Maaf, resep tidak ditemukan</Text>
     }
   </View>
 )
@@ -67,7 +67,7 @@ export default function RecipeList({ route, navigation }) {
       setLoading(false)
 
     } catch (e) {
-      Alert.alert('Failed', e.response.data?.message?.message ?? 'Oops something wrong')
+      Alert.alert('Peringatan', e.response.data?.message?.message ?? 'Maaf terjadi kesalahan')
       setData({
         detectedIngredients: [],
         data: []
@@ -80,7 +80,7 @@ export default function RecipeList({ route, navigation }) {
 
   return (
     <View style={styles.container(loading)}>
-      <Text style={styles.subtitle}>Suggested Recipe:</Text>
+      <Text style={styles.subtitle}>Resep yang ditemukan:</Text>
       <FlatList
         data={data.data}
         keyExtractor={item => item.id}
@@ -89,10 +89,10 @@ export default function RecipeList({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={!loading ? (
           <>
-            <Text style={styles.title}>Yayy found {data.data.length} item recipes!</Text>
+            <Text style={styles.title}>Berhasil menemukan {data.data.length} resep!</Text>
             {data.detectedIngredients.length > 0 ? (
               <>
-                <Text style={styles.subtitle}>Detected Ingredients:</Text>
+                <Text style={styles.subtitle}>Bahan-bahan yang terdeteksi:</Text>
                 {data.detectedIngredients.map((item, key) => (
                   <Text style={styles.itemIngredients} key={key}>{key + 1}. {item}</Text>
                 ))}

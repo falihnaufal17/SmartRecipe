@@ -1,11 +1,11 @@
 export const PLACES = [
   {
-    label: "Grocery Store",
+    label: "Toko Kelontong",
     value: "Grocery Store"
   },
   {
-    label: "Traditional Market",
-    value: "Pasar Tradisional",
+    label: "Pasar Tradisional",
+    value: "Traditional Market",
   },
   {
     label: "Supermarket",

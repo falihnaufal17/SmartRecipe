@@ -18,7 +18,7 @@ function _renderItem({ item: { title, body, recipe_id }, onPress }) {
 function _headerItem() {
   return (
     <View style={styles.header}>
-      <Text variant='headlineLarge'>Bookmarks</Text>
+      <Text variant='headlineLarge'>Riwayat Resep</Text>
     </View>
   )
 }
@@ -31,7 +31,7 @@ function EmptyComponent({loading}) {
   }
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text variant="bodyMedium">Oops, Bookmark is empty</Text>
+      <Text variant="bodyMedium">Maaf, riwayat resep tidak ditemukan</Text>
     </View>
   )
 }

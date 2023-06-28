@@ -5,7 +5,7 @@ export default function Splash() {
   return (
     <View style={styles.container}>
       <ActivityIndicator size="large" />
-      <Text>Loading...</Text>
+      <Text>Sedang memuat...</Text>
     </View>
   )
 }
