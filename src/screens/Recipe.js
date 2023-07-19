@@ -1,29 +1,27 @@
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, View, StyleSheet, ActivityIndicator, Image, ScrollView, SafeAreaView, TouchableOpacity, ToastAndroid } from 'react-native'
-import { firstLetterCapital } from '../helper';
 import {Text, MD3Colors} from 'react-native-paper'
 import { useAuth } from '../contexts/Auth';
 import { BASE_API_URL } from '../constants/general';
+import { WebView } from 'react-native-webview';
 
 const Recipe = ({ route }) => {
-  const { id } = route.params
+  const { row } = route.params
   const [detail, setDetail] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const auth = useAuth()
 
   const fetchDetail = async () => {
-    setLoading(true)
-
     try {
-      const response = await axios.get(`${BASE_API_URL}/clarifai/detail/${id}`, {
+      const response = await axios.get(`${BASE_API_URL}/clarifai/detail/${row.id}`, {
         headers: {
           'Authorization': `Bearer ${auth.authData.token}`
         }
       })
 
-      setDetail(response.data?.data)
+      setDetail(response.data.data)
       setLoading(false)
     } catch (e) {
       setLoading(false)
@@ -31,17 +29,14 @@ const Recipe = ({ route }) => {
     }
   }
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
 
-      fetchDetail()
+    fetchDetail()
 
-      return () => {
-        setDetail(null)
-      }
-    }, [id])
-  )
-  
+    return () => {
+      setDetail(null)
+    }
+  }, [row])
 
   if (loading) {
     return (
@@ -54,7 +49,7 @@ const Recipe = ({ route }) => {
 
   const addToBookmark = async () => {
     try {
-      const res = await axios.post(`${BASE_API_URL}/bookmark/add-bookmark`, {recipeId: id}, {
+      const res = await axios.post(`${BASE_API_URL}/bookmark/add-bookmark`, {recipeId: row.id}, {
         headers: {
           'Authorization': `Bearer ${auth.authData.token}`
         }
@@ -86,7 +81,7 @@ const Recipe = ({ route }) => {
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
-          <Image source={{ uri: detail?.image }} style={styles.thumbnail} />
+          <Image source={{ uri: detail?.thumbnail }} style={styles.thumbnail} />
           <Text style={styles.headerTitle}>{detail?.title}</Text>
           {detail ? !detail?.isBookmarked ? (
             <TouchableOpacity style={styles.btnBookmark} activeOpacity={0.8} onPress={addToBookmark}>
@@ -101,25 +96,30 @@ const Recipe = ({ route }) => {
         <View style={styles.contentSection}>
           <Text style={styles.contentTitle}>Bahan-bahan:</Text>
           {detail?.ingredients?.map((item, key) => (
-            <Text style={styles.contentItem} key={key}>- {firstLetterCapital(item.name)} ({item.amount.metric.value} {item.amount.metric.unit})</Text>
+            <Text style={styles.contentItem} key={key}>- {item}</Text>
           ))}
         </View>
         <View style={styles.contentSection}>
           <Text style={styles.contentTitle}>Peralatan:</Text>
           {detail?.equipments?.map((item, key) => (
-            <Text style={styles.contentItem} key={key}>- {firstLetterCapital(item.name)}</Text>
+            <Text style={styles.contentItem} key={key}>- {item}</Text>
           ))}
         </View>
         <View style={styles.contentSection}>
           <Text style={styles.contentTitle}>Instruksi:</Text>
           {detail?.instructions?.map((item, key) => (
-            <>
-              {item?.name?.length > 0 ? <Text style={styles.contentItem} key={key}>{key + 1}. {item.name}</Text> : null}
-              {item.steps.map((step, stepKey) => (
-                <Text style={styles.contentItem} key={stepKey}>{step.number}. {step.step}</Text>
-              ))}
-            </>
+            <View style={styles.row} key={key}>
+              <Text style={styles.contentItem}>{key + 1}. </Text> 
+              <Text style={styles.contentItem}>{item}</Text> 
+            </View>
           ))}
+        </View>
+        <View style={styles.contentSection}>
+          <WebView
+            source={{ uri: detail?.videoUrl }}
+            allowsInlineMediaPlayback={true}
+            style={styles.videoEmbed}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -190,4 +190,11 @@ const styles = StyleSheet.create({
   btnDangerBookmark: {
     backgroundColor: MD3Colors.error40,
   },
+  row: {
+    flexDirection: 'row'
+  },
+  videoEmbed: {
+    width: '100%',
+    height: 200
+  }
 })

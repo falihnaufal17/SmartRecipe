@@ -6,9 +6,9 @@ import { Text } from 'react-native-paper'
 import { useAuth } from '../contexts/Auth'
 import { BASE_API_URL } from '../constants/general'
 
-function _renderItem({ item: { title, body, recipe_id }, onPress }) {
+function _renderItem({ item: { title, body, recipe_id }, row, onPress }) {
   return (
-    <TouchableOpacity onPress={() => onPress(recipe_id)} style={styles.item}>
+    <TouchableOpacity onPress={() => onPress(row)} style={styles.item}>
       <Image source={{uri: body.image}} style={styles.thumbnail} />
       <Text variant='titleLarge'>{title}</Text>
     </TouchableOpacity>
@@ -70,13 +70,13 @@ export default function Bookmark({ navigation }) {
     fetchBookmarks()
   }
 
-  const goToDetail = (id) => navigate('RecipeStack', { id })
+  const goToDetail = (row) => navigate('RecipeStack', { row })
 
   return (
     <FlatList
       data={data}
       keyExtractor={(item) => item.id}
-      renderItem={(item) => _renderItem({...item, onPress: goToDetail})}
+      renderItem={(item) => _renderItem({...item, row: item, onPress: goToDetail})}
       ListHeaderComponent={_headerItem}
       contentContainerStyle={styles.container}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

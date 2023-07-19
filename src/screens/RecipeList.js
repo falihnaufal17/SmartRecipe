@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import { TouchableOpacity, Image, Text, View, StyleSheet, Alert, FlatList, ActivityIndicator } from 'react-native'
 import { BASE_API_URL } from '../constants/general'
 
-const Item = ({ title, image, id, onPress }) => {
+const Item = ({ title, thumbnail, id, row, onPress }) => {
   return (
-    <TouchableOpacity onPress={() => onPress(id)} style={styles.item}>
-      <Image source={{ uri: image }} style={styles.thumbnail} />
+    <TouchableOpacity onPress={() => onPress(row)} style={styles.item}>
+      <Image source={{ uri: thumbnail }} style={styles.thumbnail} />
       <Text style={styles.titleItem}>{title}</Text>
     </TouchableOpacity>
   )
@@ -57,17 +57,17 @@ export default function RecipeList({ route, navigation }) {
       })
 
       const res = await axios.post(`${BASE_API_URL}/clarifai/detect`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-      const { data: respData } = res.data
-      const { data: recipes, detectedIngredients } = respData
+      const { data: recipes, detectedIngredients } = res.data
 
       setData({
         data: recipes,
-        detectedIngredients
+        detectedIngredients: [...detectedIngredients.split(';')]
       })
       setLoading(false)
 
     } catch (e) {
-      Alert.alert('Peringatan', e.response.data?.message?.message ?? 'Maaf terjadi kesalahan')
+      console.log(e)
+      Alert.alert('Peringatan', e.response?.data?.message?.message ?? 'Maaf terjadi kesalahan')
       setData({
         detectedIngredients: [],
         data: []
@@ -76,7 +76,7 @@ export default function RecipeList({ route, navigation }) {
     }
   }
 
-  const goToDetail = (id) => navigate('RecipeStack', { id })
+  const goToDetail = (row) => navigate('RecipeStack', { row })
 
   return (
     <View style={styles.container(loading)}>
@@ -84,7 +84,7 @@ export default function RecipeList({ route, navigation }) {
       <FlatList
         data={data.data}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => <Item title={item.title} image={item.image} id={item.id} onPress={goToDetail} />}
+        renderItem={({ item }) => <Item title={item.title} thumbnail={item.thumbnail} id={item.id} row={item} onPress={goToDetail} />}
         ListEmptyComponent={<ListEmpty loading={loading} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={!loading ? (
