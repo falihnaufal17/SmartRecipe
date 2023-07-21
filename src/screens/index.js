@@ -58,9 +58,9 @@ function HomeTab() {
         }
       })}
     >
-      <Tab.Screen name="HomeTab" options={{title: 'Cari Resep'}} component={Home} />
-      <Tab.Screen name="StoreTab" options={{title: 'Cari Toko Terdekat'}} component={Store} />
-      <Tab.Screen name="BookmarkTab" options={{title: 'Riwayat Resep'}} component={Bookmark} />
+      <Tab.Screen name="HomeTab" options={{title: 'Cari Resep Masakan'}} component={Home} />
+      <Tab.Screen name="StoreTab" options={{title: 'Cari Toko Kelontong'}} component={Store} />
+      <Tab.Screen name="BookmarkTab" options={{title: 'Riwayat Resep Masakan'}} component={Bookmark} />
       <Tab.Screen name="AccountTab" options={{title: 'Akun'}} component={Account} />
     </Tab.Navigator>
   )

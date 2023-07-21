@@ -17,7 +17,7 @@ const ListEmpty = ({ loading }) => (
     {loading ? (
       <>
         <ActivityIndicator size="large" />
-        <Text>Loading...</Text>
+        <Text>Sedang memuat...</Text>
       </>
     ) : <Text>Maaf, resep tidak ditemukan</Text>
     }

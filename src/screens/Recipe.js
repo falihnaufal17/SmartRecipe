@@ -115,6 +115,7 @@ const Recipe = ({ route }) => {
           ))}
         </View>
         <View style={styles.contentSection}>
+        <Text style={styles.contentTitle}>Video Tutorial</Text>
           <WebView
             source={{ uri: detail?.videoUrl }}
             allowsInlineMediaPlayback={true}
