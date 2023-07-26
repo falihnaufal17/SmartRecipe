@@ -36,6 +36,7 @@ const AuthProvider: React.FC = ({ children }) => {
       AsyncStorage.setItem('@AuthData', JSON.stringify(_authData));
     } catch (error: any) {
       setLoading(false)
+      console.log(error.response.data)
       Alert.alert('Error', error.response.data.message)
     }
   }

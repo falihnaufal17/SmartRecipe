@@ -37,6 +37,11 @@ export default function SignUp({navigation}) {
         setErrors(prev => ({...prev, ...objError}))
         setLoading(false)
         return
+      } else if (payload['password'] !== payload['confirmPassword']) {
+        objError['confirmPassword'] = 'Konfirmasi Kata Sandi tidak sama'
+
+        setErrors(prev => ({...prev, ...objError}))
+        setLoading(false)
       } else {
         const tempObj = errors
         delete tempObj[key]
