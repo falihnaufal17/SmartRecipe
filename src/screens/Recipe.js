@@ -1,6 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, View, StyleSheet, ActivityIndicator, Image, ScrollView, SafeAreaView, TouchableOpacity, ToastAndroid } from 'react-native'
 import {Text, MD3Colors} from 'react-native-paper'
 import { useAuth } from '../contexts/Auth';

@@ -6,10 +6,10 @@ import { Text } from 'react-native-paper'
 import { useAuth } from '../contexts/Auth'
 import { BASE_API_URL } from '../constants/general'
 
-function _renderItem({ item: { title, body, recipe_id }, row, onPress }) {
+function _renderItem({ item: { title, body }, onPress }) {
   return (
-    <TouchableOpacity onPress={() => onPress(row)} style={styles.item}>
-      <Image source={{uri: body.image}} style={styles.thumbnail} />
+    <TouchableOpacity onPress={() => onPress(body)} style={styles.item}>
+      <Image source={{uri: body.thumbnail}} style={styles.thumbnail} />
       <Text variant='titleLarge'>{title}</Text>
     </TouchableOpacity>
   )
@@ -60,7 +60,10 @@ export default function Bookmark({ navigation }) {
       setLoading(false)
       setData(response.data.data)
     } catch (error) {
-      ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT)
+      setLoading(false)
+      setRefreshing(false)
+
+      ToastAndroid.show(error.response?.data?.message ?? 'Terjadi kesalahan!', ToastAndroid.SHORT)
     }
   }
 
@@ -76,7 +79,7 @@ export default function Bookmark({ navigation }) {
     <FlatList
       data={data}
       keyExtractor={(item) => item.id}
-      renderItem={(item) => _renderItem({...item, row: item, onPress: goToDetail})}
+      renderItem={(item) => _renderItem({...item, onPress: goToDetail})}
       ListHeaderComponent={_headerItem}
       contentContainerStyle={styles.container}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
