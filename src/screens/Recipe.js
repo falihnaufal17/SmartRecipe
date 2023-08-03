@@ -24,17 +24,13 @@ const Recipe = ({ route }) => {
       setLoading(false)
     } catch (e) {
       setLoading(false)
+      console.log(e)
       Alert.alert('Peringatan', e.response.data?.message?.message ?? 'Maaf terjadi kesalahan')
     }
   }
 
   useEffect(() => {
-
     fetchDetail()
-
-    return () => {
-      setDetail(null)
-    }
   }, [row])
 
   if (loading) {
@@ -57,6 +53,7 @@ const Recipe = ({ route }) => {
       fetchDetail()
       ToastAndroid.show(res.data.message, ToastAndroid.SHORT)
     } catch (error) {
+      console.log(error)
       ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT)
     }
   }
@@ -72,6 +69,7 @@ const Recipe = ({ route }) => {
       fetchDetail()
       ToastAndroid.show(res.data.message, ToastAndroid.SHORT)
     } catch (error) {
+      console.log(error)
       ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT)
     }
   }

@@ -12,7 +12,7 @@ export default function About() {
   useEffect(() => {
     const requestCameraPermission = async () => {
       const cameraPermission = await Camera.getCameraPermissionStatus()
-      setPermission(cameraPermission)
+      setPermission(cameraPermission === 'authorized' ? 'Diizinkan' : 'Tidak Diizinkan')
     }
 
     const hasLocationPermission = async () => {

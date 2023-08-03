@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, Alert, TouchableOpacity, Linking, PermissionsAndroid, ScrollView, SafeAreaView } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { PLACES } from '../constants/store';
 import axios from 'axios'
 import { API_KEY_GOOGLE_MAPS, BASE_URL_PLACES_API } from '../constants/general';
 import Geocoder from 'react-native-geocoding';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation from '@react-native-community/geolocation';
 import { useFocusEffect } from '@react-navigation/native';
 
 Geocoder.init(API_KEY_GOOGLE_MAPS);
@@ -41,14 +41,29 @@ export default function Store() {
   
   // Check if location permission is granted
   const hasLocationPermission = async () => {
-    const granted = await PermissionsAndroid.check(
+    const grantByUser = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'Geolocation Permission',
+        message: 'Can we access your location?',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
     );
-    return granted === PermissionsAndroid.RESULTS.GRANTED;
+
+    console.log('grantByUser', grantByUser);
+    if (grantByUser === 'granted') {
+      console.log('You can use Geolocation');
+      return true;
+    } else {
+      console.log('You cannot use Geolocation');
+      return false;
+    }
   };
 
-  const getCurrentPosition = () => {
-    if (hasLocationPermission()) {
+  const getCurrentPosition = async () => {
+    if (await hasLocationPermission()) {
       Geolocation.getCurrentPosition(
         position => {
           setRegion(prev => ({
@@ -68,7 +83,7 @@ export default function Store() {
         {
           enableHighAccuracy: true,
           timeout: 15000,
-          maximumAge: 10000,
+          maximumAge: 10000
         },
       );
     } else {

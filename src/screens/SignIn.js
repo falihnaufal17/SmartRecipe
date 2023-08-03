@@ -21,8 +21,6 @@ export default function SignIn({ navigation }) {
     navigation.navigate('SignUp')
   }
 
-  console.log(auth.loading)
-
   return (
     <View style={styles.container}>
       <Text style={styles.appTitle}>{APP_NAME}</Text>
