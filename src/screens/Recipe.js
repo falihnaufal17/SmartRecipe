@@ -4,7 +4,7 @@ import { Alert, View, StyleSheet, ActivityIndicator, Image, ScrollView, SafeArea
 import {Text, MD3Colors} from 'react-native-paper'
 import { useAuth } from '../contexts/Auth';
 import { BASE_API_URL } from '../constants/general';
-import { WebView } from 'react-native-webview';
+import {WebView} from 'react-native-webview';
 
 const Recipe = ({ route }) => {
   const { row } = route.params
@@ -31,7 +31,7 @@ const Recipe = ({ route }) => {
 
   useEffect(() => {
     fetchDetail()
-  }, [row])
+  }, [])
 
   if (loading) {
     return (
@@ -78,14 +78,16 @@ const Recipe = ({ route }) => {
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
-          <Image source={{ uri: detail?.thumbnail }} style={styles.thumbnail} />
+          {detail ? (
+            <Image source={{ uri: detail?.thumbnail }} style={styles.thumbnail} />
+          ) : null}
           <Text style={styles.headerTitle}>{detail?.title}</Text>
           {detail ? !detail?.isBookmarked ? (
-            <TouchableOpacity style={styles.btnBookmark} activeOpacity={0.8} onPress={addToBookmark}>
+            <TouchableOpacity style={styles.btnBookmark} activeOpacity={0.8} onPress={() => addToBookmark()}>
               <Text style={styles.txtBtnBookmark}>Simpan ke dalam riwayat resep</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={[styles.btnBookmark, styles.btnDangerBookmark]} activeOpacity={0.8} onPress={deleteBookmark}>
+            <TouchableOpacity style={[styles.btnBookmark, styles.btnDangerBookmark]} activeOpacity={0.8} onPress={() => deleteBookmark()}>
               <Text style={styles.txtBtnBookmark}>Hapus dari riwayat resep</Text>
             </TouchableOpacity>
           ) : null}
@@ -112,9 +114,9 @@ const Recipe = ({ route }) => {
           ))}
         </View>
         <View style={styles.contentSection}>
-        <Text style={styles.contentTitle}>Video Tutorial</Text>
+          <Text style={styles.contentTitle}>Video Tutorial</Text>
           <WebView
-            source={{ uri: detail?.videoUrl }}
+            source={{ uri: detail ? detail.videoUrl : '' }}
             allowsInlineMediaPlayback={true}
             style={styles.videoEmbed}
           />
@@ -193,6 +195,7 @@ const styles = StyleSheet.create({
   },
   videoEmbed: {
     width: '100%',
-    height: 200
+    height: 200,
+    opacity: 0.99
   }
 })

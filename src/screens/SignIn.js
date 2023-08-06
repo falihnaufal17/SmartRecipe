@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, ActivityIndicator } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useAuth } from '../contexts/Auth'
 import { APP_NAME } from '../constants/general'
 
@@ -26,20 +25,25 @@ export default function SignIn({ navigation }) {
       <Text style={styles.appTitle}>{APP_NAME}</Text>
       <Text style={styles.screenTitle}>Masuk</Text>
       <View style={styles.formGroup}>
-        <Text>Nama Pengguna</Text>
+        <Text style={{ color: '#000000' }}>Nama Pengguna</Text>
         <TextInput
           placeholder="Masukkan nama pengguna disini..."
           style={styles.formControl}
-          onChangeText={v => setPayload(prev => ({ ...prev, username: v }))} />
+          onChangeText={v => setPayload(prev => ({ ...prev, username: v }))}
+          placeholderTextColor="grey"
+        />
       </View>
       <View style={styles.formGroup}>
-        <Text>Kata Sandi</Text>
+        <Text style={{ color: '#000000' }}>Kata Sandi</Text>
         <View style={styles.formGroupAppend}>
           <TextInput
             placeholder="Masukkan kata sandi disini..."
             secureTextEntry={!show}
-            onChangeText={v => setPayload(prev => ({ ...prev, password: v }))} />
-          <Icon onPress={handleSetShow} name={!show ? "eye" : "eye-off"} size={20} />
+            onChangeText={v => setPayload(prev => ({ ...prev, password: v }))}
+            placeholderTextColor="grey"
+            style={{color: '#000'}}
+          />
+          <Icon color="#000" onPress={handleSetShow} name={!show ? "eye" : "eye-off"} size={20} />
         </View>
       </View>
       <TouchableOpacity
@@ -74,7 +78,8 @@ const styles = StyleSheet.create({
   },
   formControl: {
     borderBottomColor: 'grey',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    color: '#000000'
   },
   formGroupAppend: {
     flexDirection: 'row',

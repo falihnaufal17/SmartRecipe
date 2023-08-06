@@ -76,28 +76,28 @@ export default function SignUp({navigation}) {
       <Text style={styles.appTitle}>{APP_NAME}</Text>
       <Text style={styles.screenTitle}>Daftar</Text>
       <View style={styles.formGroup}>
-        <Text>Nama Lengkap</Text>
-        <TextInput placeholder="Masukkan nama lengkap disini..." style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, fullname: v}))} />
+        <Text style={{color: '#000000'}}>Nama Lengkap</Text>
+        <TextInput placeholderTextColor="grey" placeholder="Masukkan nama lengkap disini..." style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, fullname: v}))} />
         {errors?.fullname ? <Text style={styles.textError} variant="bodySmall">{errors.fullname}</Text> : null}
       </View>
       <View style={styles.formGroup}>
-        <Text>Nama Pengguna</Text>
-        <TextInput placeholder="Masukkan nama pengguna disini..." style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, username: v}))} />
+        <Text style={{color: '#000000'}}>Nama Pengguna</Text>
+        <TextInput placeholderTextColor="grey" placeholder="Masukkan nama pengguna disini..." style={styles.formControl} onChangeText={v => setPayload(prev => ({...prev, username: v}))} />
         {errors?.username ? <Text style={styles.textError} variant="bodySmall">{errors.username}</Text> : null}
       </View>
       <View style={styles.formGroup}>
-        <Text>Kata Sandi</Text>
+        <Text style={{color: '#000000'}}>Kata Sandi</Text>
         <View style={styles.formGroupAppend}>
-          <TextInput placeholder="Masukkan kata sandi disini..." secureTextEntry={!show} onChangeText={v => setPayload(prev => ({...prev, password: v}))} />
-          <Icon onPress={handleSetShow} name={!show ? "eye" : "eye-off"} size={20} />
+          <TextInput style={{color: '#000'}} placeholderTextColor="grey" placeholder="Masukkan kata sandi disini..." secureTextEntry={!show} onChangeText={v => setPayload(prev => ({...prev, password: v}))} />
+          <Icon color="#000" onPress={handleSetShow} name={!show ? "eye" : "eye-off"} size={20} />
         </View>
         {errors?.password ? <Text style={styles.textError} variant="bodySmall">{errors.password}</Text> : null}
       </View>
       <View style={styles.formGroup}>
-        <Text>Konfirmasi Kata Sandi</Text>
+        <Text style={{color: '#000000'}}>Konfirmasi Kata Sandi</Text>
         <View style={styles.formGroupAppend}>
-          <TextInput placeholder="Masukkan ulang kata sandi disini..." secureTextEntry={!showRetype} onChangeText={v => setPayload(prev => ({...prev, confirmPassword: v}))} />
-          <Icon onPress={handleSetShowRetype} name={!showRetype ? "eye" : "eye-off"} size={20} />
+          <TextInput style={{color: '#000'}} placeholderTextColor="grey" placeholder="Masukkan ulang kata sandi disini..." secureTextEntry={!showRetype} onChangeText={v => setPayload(prev => ({...prev, confirmPassword: v}))} />
+          <Icon color="#000" onPress={handleSetShowRetype} name={!showRetype ? "eye" : "eye-off"} size={20} />
         </View>
         {errors?.confirmPassword ? <Text style={styles.textError} variant="bodySmall">{errors.confirmPassword}</Text> : null}
       </View>
@@ -133,7 +133,8 @@ const styles = StyleSheet.create({
   },
   formControl: {
     borderBottomColor: 'grey',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    color: '#000'
   },
   formGroupAppend: {
     flexDirection: 'row',
