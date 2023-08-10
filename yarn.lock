@@ -6036,6 +6036,11 @@ react-native-gradle-plugin@^0.71.17:
   resolved "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.17.tgz"
   integrity sha512-OXXYgpISEqERwjSlaCiaQY6cTY5CH6j73gdkWpK0hedxtiWMWgH+i5TOi4hIGYitm9kQBeyDu+wim9fA8ROFJA==
 
+react-native-location-enabler@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npmjs.org/react-native-location-enabler/-/react-native-location-enabler-4.1.1.tgz"
+  integrity sha512-1gXJ+NzH5JKpaR23t1P8afEB7TKKfBkdXk2avhNUuTBlhBrqa2HrL4uDwYHoc4ZcwchsVC2P0Q7gP9L5Ot+KJw==
+
 react-native-maps@^1.7.1:
   version "1.7.1"
   resolved "https://registry.npmjs.org/react-native-maps/-/react-native-maps-1.7.1.tgz"
