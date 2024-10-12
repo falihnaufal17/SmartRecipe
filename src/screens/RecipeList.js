@@ -76,7 +76,13 @@ export default function RecipeList({ route, navigation }) {
     }
   }
 
-  const goToDetail = (row) => navigate('RecipeStack', { row })
+  const sanitizeDetectedIngredients = () => {
+    return data.detectedIngredients.filter((item, index) => {
+      return data.detectedIngredients.indexOf(item) === index
+    }) || []
+  }
+
+  const goToDetail = (row) => navigate('RecipeStack', { row, detected: data.detectedIngredients })
 
   return (
     <View style={styles.container(loading)}>
@@ -90,10 +96,10 @@ export default function RecipeList({ route, navigation }) {
         ListHeaderComponent={!loading ? (
           <>
             <Text style={styles.title}>Berhasil menemukan {data.data.length} resep!</Text>
-            {data.detectedIngredients.length > 0 ? (
+            {sanitizeDetectedIngredients().length > 0 ? (
               <>
                 <Text style={styles.subtitle}>Bahan-bahan yang terdeteksi:</Text>
-                {data.detectedIngredients.map((item, key) => (
+                {sanitizeDetectedIngredients().map((item, key) => (
                   <Text style={styles.itemIngredients} key={key}>{key + 1}. {item}</Text>
                 ))}
               </>

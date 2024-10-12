@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Alert, View, StyleSheet, ActivityIndicator, Image, ScrollView, SafeAreaView, TouchableOpacity, ToastAndroid } from 'react-native'
 import {Text, MD3Colors} from 'react-native-paper'
 import { useAuth } from '../contexts/Auth';
@@ -7,7 +7,7 @@ import { BASE_API_URL } from '../constants/general';
 import {WebView} from 'react-native-webview';
 
 const Recipe = ({ route }) => {
-  const { row } = route.params
+  const { row, detected } = route.params
   const [detail, setDetail] = useState(null)
   const [loading, setLoading] = useState(true)
   const auth = useAuth()
@@ -74,6 +74,12 @@ const Recipe = ({ route }) => {
     }
   }
 
+  const sanitizeDetectedIngredients = () => {
+    return detected.filter((item, index) => {
+      return detected.indexOf(item) === index
+    })
+  }
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
@@ -91,6 +97,12 @@ const Recipe = ({ route }) => {
               <Text style={styles.txtBtnBookmark}>Hapus dari riwayat resep</Text>
             </TouchableOpacity>
           ) : null}
+        </View>
+        <View style={styles.contentSection}>
+          <Text style={styles.contentTitle}>Bahan-bahan yang dimiliki:</Text>
+          {sanitizeDetectedIngredients().map((item, key) => (
+            <Text style={styles.contentItem} key={key}>- {item}</Text>
+          ))}
         </View>
         <View style={styles.contentSection}>
           <Text style={styles.contentTitle}>Bahan-bahan:</Text>
